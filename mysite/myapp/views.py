@@ -1,9 +1,19 @@
 from django.shortcuts import render,redirect
 from .models import Task
 from .forms import TodoForm
+from django.views.generic import ListView
+from django.views.generic.detail import DetailView
 
 # Create your views here.
+class TaskListView(ListView):
+    model = Task
+    template_name = 'myapp/index.html'
+    context_object_name = 'task_list'
 
+class TaskDetailView(DetailView):
+    model = Task
+    template_name = 'myapp/detail.html'
+    context_object_name = 'task'
 
 def index(request):
     task_list = Task.objects.all()
@@ -11,7 +21,6 @@ def index(request):
         name = request.POST.get('name','')
         priority = request.POST.get('priority','')
         date = request.POST.get('date','')
-    
         task = Task(name = name, priority = priority, date = date)
         task.save()
         return redirect('/')
